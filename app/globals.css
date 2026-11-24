@@ -1,49 +1,108 @@
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@import "tailwindcss";
+
+@theme {
+  --color-white: #f9f9fa;
+  --color-paper: #eceef0;
+  --color-silver: #cfd2d6;
+  --color-ink: #1d1f23;
+  --color-ink-soft: #2c2f34;
+  --color-mark: #f2c230;
+  --color-link: #35568f;
+  --color-serp: #2d7a4f;
+  --color-good: #2f7d4f;
+  --color-warn: #a8661a;
+  --color-bad: #b8453b;
+  --color-line: #d4d7db;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@theme inline {
+  --font-sans: var(--font-instrument), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-instrument-serif), ui-serif, Georgia, "Times New Roman", serif;
+}
+
+@layer base {
+  body {
+    @apply bg-paper font-sans text-ink antialiased;
+    background-image: radial-gradient(1400px 520px at 50% -8%, #f8f9fa, transparent);
+    background-repeat: no-repeat;
+  }
+  :focus-visible {
+    outline: 3px solid var(--color-link);
+    outline-offset: 2px;
   }
 }
 
-html {
-  height: 100%;
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg bg-ink px-5 py-3 text-sm font-semibold text-white transition hover:bg-ink-soft active:translate-y-px disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  .btn-mark {
+    @apply bg-mark text-ink hover:bg-mark hover:brightness-95;
+    background-image: linear-gradient(180deg, #f7d04d, #e8b61c);
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.55), 0 1px 2px rgb(29 31 35 / 0.2);
+  }
+  .btn-line {
+    @apply border border-ink/20 bg-white text-ink hover:border-ink hover:bg-white;
+  }
+  .input {
+    @apply w-full rounded-lg border border-line bg-white px-4 py-3 text-[15px] outline-none transition placeholder:text-ink/40 focus:border-ink focus:ring-4 focus:ring-mark/70;
+  }
+  .panel {
+    @apply rounded-xl border border-line bg-white;
+    box-shadow: 0 1px 2px rgb(29 31 35 / 0.04);
+  }
+  /* Highlighter-pen effect, used for "do this" text */
+  .marker {
+    background: linear-gradient(transparent 52%, var(--color-mark) 52% 94%, transparent 94%);
+    padding: 0 0.15em;
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+  }
+  .th {
+    @apply px-4 py-3 font-medium text-ink/60;
+  }
+  .td {
+    @apply border-t border-line px-4 py-3.5 tabular-nums;
+  }
 }
 
-html,
-body {
-  max-width: 100vw;
-  overflow-x: hidden;
+/* Headings use a single-weight serif, so keep the weight at 400 and the spacing tight */
+.font-display {
+  font-weight: 400;
+  letter-spacing: -0.015em;
 }
 
-body {
-  min-height: 100%;
-  display: flex;
-  flex-direction: column;
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+/* Graphite and gold get a soft sheen instead of flat color */
+.bg-ink {
+  background-image: linear-gradient(160deg, #2b2e33 0%, #1a1c1f 100%);
+}
+.bg-mark {
+  background-image: linear-gradient(180deg, #f6ca3f 0%, #ecb922 100%);
 }
 
-* {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
+/* Scrolling strip on the landing page */
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
 }
-
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
+.marquee-track {
+  animation: marquee 50s linear infinite;
+}
+.marquee:hover .marquee-track {
+  animation-play-state: paused;
+}
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track {
+    animation: none;
   }
 }
